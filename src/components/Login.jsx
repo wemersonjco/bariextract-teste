@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
 import { supabase } from '../services/examesSupabaseService';
-import { Database, Eye, EyeOff, LogIn, ShieldCheck, KeyRound, UserPlus, Mail, CheckCircle2, ArrowLeft } from 'lucide-react';
-
-// Código de convite exigido para criar conta (compartilhe apenas com quem for
-// usar o sistema, ex: avaliadores da competição). Configurado em VITE_INVITE_CODE
-// no .env / nas variáveis de ambiente do deploy - não fica hardcoded no código.
-const INVITE_CODE = import.meta.env.VITE_INVITE_CODE;
+import { Database, Eye, EyeOff, LogIn, ShieldCheck, UserPlus, Mail, CheckCircle2, ArrowLeft } from 'lucide-react';
 
 const traduzErroSignup = (message) => {
   if (!message) return 'Erro ao criar conta. Tente novamente.';
@@ -34,7 +29,6 @@ const Login = ({ onLogin }) => {
 
   // Campos exclusivos do cadastro
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [inviteCode, setInviteCode] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
 
   const switchMode = (newMode) => {
@@ -42,7 +36,6 @@ const Login = ({ onLogin }) => {
     setError('');
     setPassword('');
     setConfirmPassword('');
-    setInviteCode('');
   };
 
   const handleLoginSubmit = async (e) => {
@@ -77,14 +70,6 @@ const Login = ({ onLogin }) => {
     e.preventDefault();
     setError('');
 
-    if (!INVITE_CODE) {
-      setError('Cadastro indisponível: o código de convite não foi configurado no sistema (VITE_INVITE_CODE).');
-      return;
-    }
-    if (inviteCode.trim() !== INVITE_CODE) {
-      setError('Código de convite inválido.');
-      return;
-    }
     if (password.length < 6) {
       setError('A senha precisa ter pelo menos 6 caracteres.');
       return;
@@ -231,26 +216,6 @@ const Login = ({ onLogin }) => {
                     disabled={loading}
                   />
                 </div>
-
-                {/* Código de convite */}
-                <div>
-                  <label htmlFor="inviteCode" className="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-2">
-                    Código de convite
-                  </label>
-                  <div className="relative">
-                    <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    <input
-                      id="inviteCode"
-                      type="text"
-                      value={inviteCode}
-                      onChange={(e) => setInviteCode(e.target.value)}
-                      className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500/30 focus:border-brand-500 outline-none transition"
-                      placeholder="Código fornecido por quem te convidou"
-                      required
-                      disabled={loading}
-                    />
-                  </div>
-                </div>
               </>
             )}
 
@@ -332,7 +297,7 @@ const Login = ({ onLogin }) => {
             {isSignup ? <Mail className="w-3.5 h-3.5" /> : <ShieldCheck className="w-3.5 h-3.5" />}
             <span>
               {isSignup
-                ? 'Cadastro protegido por código de convite'
+                ? 'Confirmação por email necessária antes do primeiro login'
                 : 'Acesso restrito · dados de pacientes tratados de forma anonimizada'}
             </span>
           </div>

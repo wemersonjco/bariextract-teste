@@ -409,3 +409,27 @@ para reprocessar/corrigir os pacientes já cadastrados; é só avisar.
 
 - `src/services/geminiService.ts` — fórmula de `percentExcessoPesoPerdido` corrigida no prompt de
   extração da IA.
+
+### 14. Removido o código de convite do cadastro
+
+O formulário de inscrição da competição não tinha campo para você informar o código de convite
+para os avaliadores, então não tinha como eles saberem qual código usar. Removi essa exigência —
+agora a tela de "Criar conta" pede só email, senha e confirmar senha, sem código nenhum.
+
+O que continua igual: o cadastro ainda usa o Supabase Auth normalmente (senha com hash, nunca em
+texto puro), e a confirmação por email antes do primeiro login continua ativa (como você escolheu
+antes) — então mesmo sem o código, cada avaliador ainda precisa confirmar um email de verdade
+para conseguir entrar, o que já barra a maioria dos cadastros aleatórios.
+
+**Fica um ponto de atenção para depois da competição**: sem o código de convite, qualquer pessoa
+que encontrar o link consegue criar conta e ver os dados anonimizados de pesquisa cadastrados no
+sistema (nunca nome ou prontuário real, mas ainda assim são dados clínicos). Quando a avaliação
+terminar, vale a pena reativar essa proteção (ou simplesmente desligar o cadastro público) —
+é só me pedir que eu reverto rapidinho, o código já existia e funcionava.
+
+### Arquivos alterados nesta rodada
+
+- `src/components/Login.jsx` — removido o campo e a validação de código de convite do cadastro.
+- `src/vite-env.d.ts`, `.env.example`, `env-production.example` — removida a variável
+  `VITE_INVITE_CODE` (não é mais usada; se você já tinha configurado essa variável na Vercel, pode
+  deixar ou remover de lá também, não faz diferença agora).

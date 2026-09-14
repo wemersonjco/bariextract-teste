@@ -7,6 +7,3 @@ VITE_GEMINI_KEY=sua_chave_gemini_aqui
 # Configuração do Supabase (opcional)
 VITE_SUPABASE_URL=https://seu-projeto.supabase.co
 VITE_SUPABASE_ANON_KEY=sua_chave_supabase_anon_aqui
-
-# Código de convite exigido para criar conta na tela de cadastro (obrigatória)
-VITE_INVITE_CODE=escolha_um_codigo_aqui
