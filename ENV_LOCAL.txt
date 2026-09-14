@@ -1,0 +1,9 @@
+# BariExtract - ambiente LOCAL (não commitar este arquivo)
+
+# Chave da API Gemini - preencha com a sua chave (a mesma que está na Vercel do projeto original,
+# ou uma nova, se preferir). Sem isso a extração de dados não funciona.
+VITE_GEMINI_KEY=COLE_SUA_CHAVE_GEMINI_AQUI
+
+# Supabase - projeto NOVO (separado do projeto de produção)
+VITE_SUPABASE_URL=https://knylwzxpatuhaegxddak.supabase.co
+VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtueWx3enhwYXR1aGFlZ3hkZGFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk2OTQ1MzAsImV4cCI6MjA3NTI3MDUzMH0.VyExUmy-7BYzsp1Cwv22WZwruT5vJYEhmL5_SnLz7Pk
