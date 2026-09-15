@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { 
   Upload, 
   FileText, 
@@ -71,8 +71,6 @@ import Login from './components/Login';
 import Loading from './components/Loading';
 import Sobre from './components/Sobre';
 import Tour from './components/Tour';
-
-const TOUR_SEEN_KEY = 'bariextract_tour_seen';
 
 ChartJS.register(
   ArcElement, 
@@ -144,26 +142,22 @@ export default function App() {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Mostrar o tour de boas-vindas na primeira vez que o usuário loga neste
-  // navegador (guardado em localStorage). Pode ser revisto a qualquer momento
-  // pelo botão de ajuda no cabeçalho.
+  // Mostrar o tour de boas-vindas sempre que o usuário fizer login (não só na
+  // primeira vez) - importante durante a avaliação da competição, para forçar
+  // os avaliadores a passar por essa explicação. O ref evita reabrir o tour
+  // sozinho a cada refresh de token do Supabase dentro da mesma aba; ele só
+  // reaparece automaticamente numa nova sessão (login novo / página recarregada).
+  // Pode ser revisto manualmente a qualquer momento pelo botão de ajuda no cabeçalho.
+  const tourShownRef = useRef(false);
   useEffect(() => {
-    if (!user) return;
-    try {
-      const seen = window.localStorage.getItem(TOUR_SEEN_KEY);
-      if (!seen) setShowTour(true);
-    } catch {
-      // localStorage indisponível (ex: modo privado) - segue sem o tour
+    if (user && !tourShownRef.current) {
+      tourShownRef.current = true;
+      setShowTour(true);
     }
   }, [user]);
 
   const handleFinishTour = () => {
     setShowTour(false);
-    try {
-      window.localStorage.setItem(TOUR_SEEN_KEY, '1');
-    } catch {
-      // localStorage indisponível - sem problema, o tour só não será lembrado
-    }
   };
 
   // Load patients from Supabase
@@ -1810,7 +1804,7 @@ const EDITABLE_FIELD_SECTIONS: { title: string; fields: { key: keyof PatientData
 const SAMPLE_RECORDS: { file: string; label: string }[] = [
   { file: 'prontuario-modelo-1-caso-simples.pdf', label: 'Modelo 1 — Caso simples' },
   { file: 'prontuario-modelo-2-caso-complexo.pdf', label: 'Modelo 2 — Caso complexo' },
-  { file: 'prontuario-modelo-3-acompanhamento-parcial.pdf', label: 'Modelo 3 — Acompanhamento parcial' },
+  { file: 'prontuario-modelo-3-caso-completo.pdf', label: 'Modelo 3 — Caso completo (todas as variáveis)' },
 ];
 
 function EditField({ label, value, onChange }: { label: string, value: string | null | undefined, onChange: (v: string) => void }) {

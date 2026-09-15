@@ -433,3 +433,42 @@ terminar, vale a pena reativar essa proteção (ou simplesmente desligar o cadas
 - `src/vite-env.d.ts`, `.env.example`, `env-production.example` — removida a variável
   `VITE_INVITE_CODE` (não é mais usada; se você já tinha configurado essa variável na Vercel, pode
   deixar ou remover de lá também, não faz diferença agora).
+
+### 15. Tour sempre aparece no login + prontuário modelo 3 mais completo
+
+Duas mudanças pedidas para reforçar a avaliação da competição:
+
+**Tour em todo login.** Antes, o tour de boas-vindas só aparecia automaticamente na primeira vez
+que o usuário fazia login (controlado por uma chave salva no `localStorage` do navegador). Agora
+ele aparece automaticamente **toda vez** que alguém faz login, para garantir que os avaliadores
+vejam essa explicação mesmo que já tenham entrado antes. Removi a checagem de `localStorage`
+(`bariextract_tour_seen`) e troquei por um controle simples em memória (`useRef`) que só evita
+reabrir o tour sozinho durante a mesma sessão do navegador (por exemplo, quando o Supabase renova
+o token de acesso em segundo plano) — mas ele sempre volta a aparecer numa sessão nova (login
+novo ou página recarregada). O botão "Tour" no cabeçalho continua funcionando normalmente para
+quem quiser rever a explicação manualmente a qualquer momento.
+
+**Prontuário modelo 3 mais completo.** O modelo 3 (um dos 3 prontuários fictícios disponíveis para
+download na tela de upload, para quem for testar o BariExtract sem ter um prontuário real em
+mãos) era um caso de "acompanhamento parcial", com poucas consultas e poucos campos preenchidos.
+Reescrevi esse prontuário como um caso "completo": agora são 12 consultas cobrindo praticamente
+todas as variáveis pesquisadas — dados sociodemográficos (estado civil, filhos, ocupação,
+escolaridade), avaliação psicológica, todas as comorbidades e negativas relevantes, exames
+pré-operatórios (incluindo um caso de H. pylori positivo já tratado e um caso de "não realizou
+colonoscopia"), toda a linha do tempo de pesos pós-operatórios (9 dias, 40 dias, 4 meses e meio, 5
+meses, 7 meses, 11 meses e 1 ano), uma intercorrência no meio do acompanhamento (anemia
+ferropriva leve), exames pós-operatórios e a consulta de alta da cirurgia bariátrica (atividade
+física, excesso de pele, adesão à suplementação). A ideia é justamente testar o quão bem o Gemini
+consegue extrair um prontuário com bastante informação espalhada em várias consultas — dado 100%
+fictício, como os outros dois modelos.
+
+O arquivo mudou de nome, de `prontuario-modelo-3-acompanhamento-parcial.pdf` para
+`prontuario-modelo-3-caso-completo.pdf`, e o rótulo na tela de upload passou a ser "Modelo 3 —
+Caso completo (todas as variáveis)".
+
+### Arquivos alterados nesta rodada
+
+- `src/App.tsx` — tour agora aparece em todo login (não só no primeiro); rótulo/nome do arquivo do
+  modelo 3 atualizados em `SAMPLE_RECORDS`.
+- `public/prontuarios-modelo/prontuario-modelo-3-caso-completo.pdf` — novo prontuário modelo 3
+  (substitui o antigo `prontuario-modelo-3-acompanhamento-parcial.pdf`, que foi removido).
